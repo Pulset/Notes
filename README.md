@@ -38,7 +38,11 @@ apply方法接受两个参数，第一个是this指向的内容，第二个就�
 -------------
 2017/6/11
 ### 构造函数
-如果不写new，这就是一个普通函数，它返回undefined。但是，如果写了new，它就变成了一个构造函数，它绑定的this指向新创建的对象，并默认返回this，也就是说，不需要在最后写return this;。
+如果不写new，这就是一个普通函数，它返回undefined。但是，如果写了new，它就变成了一个构造函数，它绑定的this指向新创建的对象，并默认返回this，也就是说，不需要在最后写return this。当一个函数对象被创建时，Function构造器产生的函数对象会运行类似这样的代码：
+```
+this.prototype = {constructor:this};
+```
+新函数对象被赋予一个prototype属性，他的值是一个包含constructor属性且值为该新函数的对象。
 ```
 function Student(name) {
     this.name = name;
