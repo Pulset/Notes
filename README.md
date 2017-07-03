@@ -66,3 +66,57 @@ arr[100] = true;
 arr.length  //101
 //arr 只包含一个属性。
 ```
+-------------
+2017/7/3
+### 深浅拷贝与堆栈的关系
+1. stack为自动分配的内存空间，它由系统自动释放；而heap则是动态分配的内存，大小不定也不会自动释放。　
+2. 基本类型：5种基本数据类型Undefined、Null、Boolean、Number 和 String，他们数据大小确定，是直接按值存放的，所以可以直接访问。  
+引用类型：存放在堆内存中的对象（如对象，数组，函数等），变量实际保存的是一个指针，这个指针指向另一个位置，每个空间大小不一样。读取时首先从栈中获得该对象的地址指针，然后再从堆内存中取得所需的数据。
+3. 浅拷贝：只是复制了一个指向对象的指针放在栈里，他和父对象指向同一个堆里的内容，所以他们两者之间只要其中一个改动，其他一个对象也会变着改动。
+4. 深拷贝：重新再堆里生成一个对象，与父对象不同。这样父子对象之间就不会产生关联。
+5. jQuery：$.extend([deep], target, object1, [objectN])  
+JS:JSON.parse(JSON.stringify(oldObject))  
+#### mui地图的坑
+1. mui中的地图是原生控件，不受css的zindex控制。所以在层级上属于最高层，如果页面要滑动的话，就要考虑把地图放在子页面中，这样才不会覆盖父页面。如果要在地图上放按钮、搜索框等等，必须新建webview。
+2. 地图覆盖问题。当打开的几个页面中都有地图时，这几个地图会出现覆盖问题。解决方案：
+```
+var sub = plus.webview.getWebviewById("nearbyCustomerList");
+if(sub != null) {
+    sub.setStyle({
+        top: '100%'
+    });
+}
+```
+通过改变位置，把地图隐藏了，回到之前的地图时，再把地图显示出来。这里用map.hide()好像没效果。
+```
+var sub = plus.webview.getWebviewById("nearbyCustomerList");
+if(sub != null) {
+    sub.setStyle({
+        top: '0px', 
+	bottom: '0px',
+    });
+}
+```
+3. 地图花屏问题。从其他页面返回回来会出现花屏现象。
+解决方案：在返回来之前，执行reload方法，使地图再加载一次。
+4. H5地图在iOS与Android中的不一致性
+      - ios中地图没有onclick事件，在本地调试的时候，可以触发onclick事件，打包之后，地图完全点不动。所以只能采用onstatuschanged事件
+      - map.setCenter()函数存在异步问题.执行需要一定的时间。所以createMarker()必须要延迟执行。在Android中则没有这样的问题，ios也只能在打包之后才会出现这个问题。
+      - ios中滑动地图在灵敏了，每滑动一次，地图会请求2次，会出现闪2次的现象。解决方式：采取flag锁
+```
+map.onstatuschanged=function(event){
+	if(over){
+		over=false;
+		map.setCenter(event.center);
+		poi=event.center;
+		setTimeout(function(){
+			createMarker(event.center);
+			loadPlaceAround(event.center,"","","",true);
+		},300);
+	}
+	isStopPull=false;
+	poiKey="";
+	page=1;							
+	mui('#refreshContainer').pullRefresh().refresh(true);	//重置上拉加载
+}
+```
