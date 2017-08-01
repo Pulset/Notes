@@ -6,6 +6,7 @@
 2. Array.isArray(arr)
 ### 判断一个对象是否为空对象
 1. $.isEmptyObject(obj) 
+2. JSON.stringify(record)=='{}'
 
 ### this的四种调用模式
 1. 方法调用模式：</br>
