@@ -4,6 +4,13 @@
 ### 判断一个数组是否为数组
 1. arr instanceof Array
 2. Array.isArray(arr)
+3. 
+```
+if (Object.prototype.toString.apply(myArray) === '[object Array]'){
+    //myArray是一个数组
+}
+```
+
 ### 判断一个对象是否为空对象
 1. $.isEmptyObject(obj) 
 2. JSON.stringify(record)=='{}'
@@ -121,3 +128,29 @@ map.onstatuschanged=function(event){
 	mui('#refreshContainer').pullRefresh().refresh(true);	//重置上拉加载
 }
 ```
+-------------
+2017/9/17
+#### parseInt
+如果字符串的第一个字符是0，那么该字符串会基于八进制来求值，所以parseInt("08") = 0 ,因此使用parseInt建议加上基数，避免出现错误。例如parseInt("08",10)
+#### setTimeout与setInterval
+参数应该为函数，当参数为字符串是会调用eval去处理，影响性能
+#### for in 语句
+可以遍历数组和对象，没有顺序。但缺点是会遍历所有从**原型链中继承下来的属性**，会出现意想不到的错误。所以应该用if语句来选择某种特定的类型或某个范围的值。
+```
+for (name in object) {
+    if (object.hasOwnProperty(name)) { 
+        //TODO
+    }        
+}
+```
+#### canvas
+canvas画布的宽高不能用css来设置，可以用js动态设置，或者直接在canvas上设置宽高。
+```
+<canvas id="picture" width="414" height="736"><canvas>
+```
+
+#### inline属性与vertical-align :top
+inline属性会距离顶部有一定的距离
+
+#### 箭头函数
+当我们使用箭头函数时，函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this，它的this是继承外面的，因此内部的this就是外层代码块的this。
