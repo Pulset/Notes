@@ -182,3 +182,67 @@ propertychange，只要当前对象属性发生改变。
 
 #### css属性calc
 - 可以用来动态的计算css属性
+
+-------------
+2018/3/8
+#### Object.defineProperty(obj, prop, descriptor)
+```
+var obj = {
+    test:"hello"
+}
+// 对象已有的属性添加特性描述
+Object.defineProperty(obj,"test",{
+    configurable:true | false,
+    enumerable:true | false,
+    value:任意类型的值,
+    writable:true | false
+});
+// value: 设置属性的值
+// writable: 值是否可以重写。true | false
+// enumerable: 目标属性是否可以被枚举。true | false
+// configurable: 目标属性是否可以被删除或是否可以再次修改特性 true | false
+```
+```
+var obj = {};
+var initValue = 'hello';
+Object.defineProperty(obj,"newKey",{
+    get:function (){
+        //当获取值的时候触发的函数
+        return initValue;    
+    },
+    set:function (value){
+        //当设置值的时候触发的函数,设置的新值通过参数value拿到
+        initValue = value;
+    }
+});
+//获取值
+console.log( obj.newKey );  //hello
+
+//设置值
+obj.newKey = 'change value';
+
+console.log( obj.newKey ); //change value
+```
+#### prototype、constructor、\__proto__ 
+1. prototype是function特有的属性，指向一个这样的{constructor:this}对象
+2. constructor指向构造函数。字符串、数字、对象、数组、函数、布尔值这几种基本类型指向String、Number、Object、Array、Function、Boolean基本的构造函数，常用于判断类型；由构造函数生成的函数指向构造函数的prototype（构造函数的prototype可能会被修改，指向其他函数）
+3. 字符串、数字、对象、数组、函数、布尔值的__proto__指向包含所有方法的基本数据类型；由构造函数生成的函数的__proto__指向构造函数的prototype
+
+#### 获取某个月具体有几天
+new Date(2018,2,0).getDate()
+
+#### 多行文本省略
+```
+text-overflow: ellipsis;
+white-space: nowrap;
+overflow: hidden;
+max-width: 60%;
+
+display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+-webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+-webkit-line-clamp: 1; /** 显示的行数 **/
+```
+
+#### toString()与toLocaleString()的区别
+1. toString()是数字和字符串都有的方法，用于转换成字符串；字符串没有toLocaleString()方法，转换成字符串之后会自动增加千分位
+2. 转换时间格式上有区别。toString()会转换成"Sun Jan 07 2018 15:22:13 GMT+0800 (中国标准时间)"；toLocaleString()会转换成"2018/1/7 下午3:22:13"
