@@ -9,8 +9,11 @@
 if (Object.prototype.toString.apply(myArray) === '[object Array]'){
     //myArray是一个数组
 }
+// 以上方法的简写
+toString.call(myArray) === '[object Array]'
 ```
-
+4.arr.constructor === Array // true
+// summary:方法3和4适用于各种基本类型，没有局限
 ### 判断一个对象是否为空对象
 1. $.isEmptyObject(obj) 
 2. JSON.stringify(record)=='{}'
